@@ -1,0 +1,21 @@
+{
+  "name": "heap",
+  "version": "0.0.1",
+  "description": "A heap implementation in typescript",
+  "main": "index.ts",
+  "author": "Ryan Frawley",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "@babel/preset-typescript": "^7.23.2",
+    "@types/jest": "^29.5.7",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0"
+  }
+}
