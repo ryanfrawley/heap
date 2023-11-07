@@ -73,12 +73,12 @@ export class Heap<T = number> {
 
 export class MinHeap extends Heap {
   constructor() {
-    super((l, r) => l - r < 0);
+    super((l, r) => l < r);
   }
 }
 
 export class MaxHeap extends Heap {
   constructor() {
-    super((l, r) => l - r > 0);
+    super((l, r) => l > r);
   }
 }
