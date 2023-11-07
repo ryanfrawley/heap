@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A heap implementation in typescript",
   "main": "index.ts",
-  "author": "Ryan Frawley",
+  "author": "Ryan Frawley <me@ryanfrawley.io>",
   "license": "MIT",
   "private": false,
   "scripts": {

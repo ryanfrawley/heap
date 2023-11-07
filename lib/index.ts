@@ -1,15 +1,19 @@
-type GetPriorityFunc<T> = (item: T) => number;
+type CompareFunc<T> = (a: T, b: T) => number; // should return a - b < 0 for min-heap, a - b > 0 for max-heap
 
-export class Heap<T> {
+export class Heap<T = number> {
   private data: T[] = [];
-  private priority: GetPriorityFunc<T>;
+  private compare: CompareFunc<T>;
 
-  constructor(priority: (item: T) => number) {
-    this.priority = priority;
+  constructor(compare: CompareFunc<T>) {
+    this.compare = compare;
   }
 
   peek(): T | undefined {
     return this.data.length ? this.data[0] : undefined;
+  }
+
+  array() {
+    return this.data;
   }
 
   push(item: T) {
@@ -17,17 +21,13 @@ export class Heap<T> {
     let child = this.data.length - 1;
     while (child > 0) {
       const parent = Math.floor((child + 1) / 2) - 1;
-      if (this.priority(this.data[child]) >= this.priority(this.data[parent])) {
+      if (this.compare(this.data[child], this.data[parent]) > 0) {
         break;
       }
       this.data[child] = this.data[parent];
       this.data[parent] = item;
       child = parent;
     }
-  }
-
-  array() {
-    return this.data;
   }
 
   pop(): T | undefined {
@@ -38,11 +38,11 @@ export class Heap<T> {
     while (parent < this.data.length - 2) {
       const left = parent * 2 + 1;
       const right = parent * 2 + 2;
-      const child = this.priority(this.data[left]) <
-          this.priority(this.data[right])
+      const child = right === this.data.length ||
+          this.compare(this.data[left], this.data[right]) < 0
         ? left
         : right;
-      if (this.priority(this.data[child]) < this.priority(this.data[parent])) {
+      if (this.compare(this.data[child], this.data[parent]) < 0) {
         const temp = this.data[parent];
         this.data[parent] = this.data[child];
         this.data[child] = temp;
