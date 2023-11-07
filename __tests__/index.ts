@@ -1,7 +1,7 @@
-import { Heap } from "../lib";
+import { Heap, MaxHeap, MinHeap } from "../lib";
 
 it("should peek the top item without removing it", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(15);
   heap.push(25);
   heap.push(5);
@@ -9,20 +9,20 @@ it("should peek the top item without removing it", () => {
 });
 
 it("should peek the top item without removing it", () => {
-  const heap = new Heap((a, b) => b - a);
+  const heap = new MinHeap();
   heap.push(15);
   heap.push(25);
   heap.push(5);
-  expect(heap.peek()).toBe(25);
+  expect(heap.peek()).toBe(5);
 });
 
 it("tests a size 0 heap", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   expect(heap.pop()).toBeUndefined();
 });
 
 it("tests a size 1 heap", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(5);
   expect(heap.array()).toEqual([5]);
   expect(heap.pop()).toBe(5);
@@ -30,7 +30,7 @@ it("tests a size 1 heap", () => {
 });
 
 it("tests a size 2 heap", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(5);
   heap.push(10);
   expect(heap.array()).toEqual([5, 10]);
@@ -40,7 +40,7 @@ it("tests a size 2 heap", () => {
 });
 
 it("tests a size 3 heap", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(5);
   heap.push(10);
   heap.push(3);
@@ -55,7 +55,7 @@ it("tests a size 3 heap", () => {
 });
 
 it("tests a size 4 heap", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(2);
   heap.push(8);
   heap.push(1);
@@ -73,7 +73,7 @@ it("tests a size 4 heap", () => {
 });
 
 it("inserts elements into the correct positions", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(1);
   heap.push(2);
   heap.push(3);
@@ -85,7 +85,7 @@ it("inserts elements into the correct positions", () => {
 });
 
 it("inserts elements into the correct positions", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(7);
   heap.push(1);
   heap.push(5);
@@ -94,7 +94,7 @@ it("inserts elements into the correct positions", () => {
 });
 
 it("inserts elements into the correct positions", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(2);
   heap.push(3);
   heap.push(1);
@@ -103,7 +103,7 @@ it("inserts elements into the correct positions", () => {
 });
 
 it("pops an element and rebalances the tree correctly", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(1);
   heap.push(3);
   heap.push(2);
@@ -113,7 +113,7 @@ it("pops an element and rebalances the tree correctly", () => {
 });
 
 it("pops an element and rebalances the tree correctly", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(7);
   heap.push(1);
   heap.push(5);
@@ -124,7 +124,7 @@ it("pops an element and rebalances the tree correctly", () => {
 });
 
 it("pops several elements and rebalances the tree correctly", () => {
-  const heap = new Heap((a, b) => a - b);
+  const heap = new MinHeap();
   heap.push(1);
   heap.push(5);
   heap.push(7);
@@ -141,7 +141,7 @@ it("pops several elements and rebalances the tree correctly", () => {
 });
 
 it("tests a string heap", () => {
-  const heap = new Heap<string>((a, b) => a.localeCompare(b));
+  const heap = new Heap<string>((a, b) => a.localeCompare(b) < 0);
   heap.push("ab");
   heap.push("a");
   heap.push("z");
@@ -173,11 +173,44 @@ it("tests an object heap", () => {
       n: 95,
     },
   ];
-  const heap = new Heap<typeof data[0]>(({ n: na }, { n: nb }) => na - nb);
+  const heap = new Heap<typeof data[0]>(({ n: na }, { n: nb }) => na - nb < 0);
   for (const d of data) {
     heap.push(d);
   }
   expect(heap.array()).toEqual([data[3], data[1], data[2], data[0], data[4]]);
+});
+
+it("yields the top results when used in a for...of", () => {
+  const heap = new MinHeap();
+  heap.push(1);
+  heap.push(5);
+  heap.push(4);
+  heap.push(3);
+  expect(heap.array()).toEqual([1, 3, 4, 5]);
+  let i = 0;
+  for (const c of heap) {
+    expect(c).toBe([1, 3, 4, 5][i++]);
+  }
+  expect(heap.array()).toHaveLength(0);
+});
+
+it("removes the top 3 elements", () => {
+  const heap = new MinHeap();
+  heap.push(1);
+  heap.push(5);
+  heap.push(4);
+  heap.push(3);
+  expect(heap.array()).toEqual([1, 3, 4, 5]);
+  expect(heap.top(3)).toEqual([1, 3, 4]);
+});
+
+it("tries to remove more than heap.length entries", () => {
+  const heap = new MinHeap();
+  heap.push(1);
+  heap.push(5);
+  heap.push(3);
+  expect(heap.array()).toEqual([1, 5, 3]);
+  expect(heap.top(4)).toEqual([1, 3, 5]);
 });
 
 it("tests a large heap", () => {
@@ -232,7 +265,7 @@ it("tests a large heap", () => {
     595,
     69,
   ];
-  const heap = new Heap((a, b) => b - a);
+  const heap = new MaxHeap();
   for (const n of data) {
     heap.push(n);
   }

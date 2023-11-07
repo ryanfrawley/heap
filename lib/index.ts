@@ -1,11 +1,17 @@
-type CompareFunc<T> = (a: T, b: T) => number; // should return a - b < 0 for min-heap, a - b > 0 for max-heap
+type CompareFunc<T> = (l: T, r: T) => boolean; // returns true when l is higher priority than r
 
 export class Heap<T = number> {
   private data: T[] = [];
   private compare: CompareFunc<T>;
 
-  constructor(compare: CompareFunc<T>) {
-    this.compare = compare;
+  constructor(compareOption: CompareFunc<T>) {
+    this.compare = compareOption;
+  }
+
+  *[Symbol.iterator]() {
+    while (this.data.length) {
+      yield this.pop();
+    }
   }
 
   peek(): T | undefined {
@@ -21,7 +27,7 @@ export class Heap<T = number> {
     let child = this.data.length - 1;
     while (child > 0) {
       const parent = Math.floor((child + 1) / 2) - 1;
-      if (this.compare(this.data[child], this.data[parent]) > 0) {
+      if (this.compare(this.data[parent], this.data[child])) {
         break;
       }
       this.data[child] = this.data[parent];
@@ -39,10 +45,10 @@ export class Heap<T = number> {
       const left = parent * 2 + 1;
       const right = parent * 2 + 2;
       const child = right === this.data.length ||
-          this.compare(this.data[left], this.data[right]) < 0
+          this.compare(this.data[left], this.data[right])
         ? left
         : right;
-      if (this.compare(this.data[child], this.data[parent]) < 0) {
+      if (this.compare(this.data[child], this.data[parent])) {
         const temp = this.data[parent];
         this.data[parent] = this.data[child];
         this.data[child] = temp;
@@ -53,5 +59,26 @@ export class Heap<T = number> {
     }
     this.data.pop();
     return result;
+  }
+
+  top(n: number): T[] {
+    const result = [];
+    let current;
+    while (n-- > 0 && (current = this.pop()) !== undefined) {
+      result.push(current);
+    }
+    return result;
+  }
+}
+
+export class MinHeap extends Heap {
+  constructor() {
+    super((l, r) => l - r < 0);
+  }
+}
+
+export class MaxHeap extends Heap {
+  constructor() {
+    super((l, r) => l - r > 0);
   }
 }
