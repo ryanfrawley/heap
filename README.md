@@ -52,6 +52,8 @@ returns `true` if `l` is a higher priority than `r`.
 
 `data`: *(optional)* Iterable data to initialize the heap with.
 
+---
+
 ### MinHeap(data?)
 
 A superclass of Heap which provides a min heap.
@@ -59,12 +61,16 @@ A superclass of Heap which provides a min heap.
 **Parameters**
 `data`: *(optional)* Iterable data to initialize the heap with.
 
+---
+
 ### MaxHeap(data?)
 
 A superclass of Heap which provides a max heap.
 
 **Parameters**
 `data`: *(optional)* Iterable data to initialize the heap with.
+
+---
 
 ### Heap.push(item)
 
@@ -74,17 +80,24 @@ Adds a new item onto the heap.
 
 `item`: The item to insert.
 
+---
+
 ### Heap.peek()
 
 Peeks the top of the heap without removing an item.
 
 **Returns**: the first item on the heap, or `undefined` if the heap is empty.
 
+---
+
 ### Heap.pop()
 
 Pops the top item from the queue and returns it.
 
+
 **Returns**: the first item on the heap, or `undefined` if the heap is empty.
+
+---
 
 ### Heap.top(n)
 
@@ -95,6 +108,8 @@ Pops *n* items off the top of the heap.
 `n`: The number of items to pop.
 
 **Returns**: An array of the popped items, in order of descending priority.
+
+---
 
 ### Heap.array()
 
