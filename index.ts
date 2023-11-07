@@ -1,7 +1,3 @@
-const parentNode = (n: number) => Math.floor((n + 1) / 2) - 1;
-const leftNode = (n: number) => Math.floor(n * 2) + 1;
-const rightNode = (n: number) => Math.floor(n * 2) + 2;
-
 type GetPriorityFunc<T> = (item: T) => number;
 
 export class Heap<T> {
@@ -19,31 +15,15 @@ export class Heap<T> {
   push(item: T) {
     this.data.push(item);
     let child = this.data.length - 1;
-    let parent = parentNode(child);
-    while (
-      child > 0 &&
-      this.priority(this.data[child]) < this.priority(this.data[parent])
-    ) {
+    while (child > 0) {
+      const parent = Math.floor((child + 1) / 2) - 1;
+      if (this.priority(this.data[child]) >= this.priority(this.data[parent])) {
+        break;
+      }
       this.data[child] = this.data[parent];
       this.data[parent] = item;
       child = parent;
     }
-  }
-
-  print() {
-    let maxDepth = Math.ceil(Math.log2(this.data.length + 1));
-    let index = 0;
-    let str = "";
-    for (let depth = maxDepth; depth > 0; depth--) {
-      let line = "";
-      for (let i = 0; i < Math.pow(2, maxDepth - depth); i++) {
-        line += " ".repeat(Math.pow(2, depth) + depth) +
-          this.data[i + index];
-      }
-      str += line + "\n";
-      index += Math.pow(2, maxDepth - depth);
-    }
-    console.log(str);
   }
 
   array() {
@@ -52,14 +32,14 @@ export class Heap<T> {
 
   pop(): T | undefined {
     const result = this.peek();
-    if (result === undefined) return undefined;
+    if (result === undefined) return;
     let parent = 0;
     this.data[0] = this.data[this.data.length - 1];
     while (parent < this.data.length - 2) {
-      const left = leftNode(parent);
-      const right = rightNode(parent);
-      const child = this.priority(this.data[leftNode(parent)]) <
-          this.priority(this.data[rightNode(parent)])
+      const left = parent * 2 + 1;
+      const right = parent * 2 + 2;
+      const child = this.priority(this.data[left]) <
+          this.priority(this.data[right])
         ? left
         : right;
       if (this.priority(this.data[child]) < this.priority(this.data[parent])) {
