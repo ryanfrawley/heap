@@ -4,8 +4,13 @@ export class Heap<T = number> {
   private data: T[] = [];
   private compare: CompareFunc<T>;
 
-  constructor(compareOption: CompareFunc<T>) {
+  constructor(compareOption: CompareFunc<T>, data?: Iterable<T>) {
     this.compare = compareOption;
+    if (data) {
+      for (const d of data) {
+        this.push(d);
+      }
+    }
   }
 
   *[Symbol.iterator]() {
@@ -72,13 +77,13 @@ export class Heap<T = number> {
 }
 
 export class MinHeap extends Heap {
-  constructor() {
-    super((l, r) => l < r);
+  constructor(data?: Iterable<number>) {
+    super((l, r) => l < r, data);
   }
 }
 
 export class MaxHeap extends Heap {
-  constructor() {
-    super((l, r) => l > r);
+  constructor(data?: Iterable<number>) {
+    super((l, r) => l > r, data);
   }
 }
